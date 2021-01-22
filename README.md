@@ -6,3 +6,7 @@ Programos paleidimui naudokite make (daryta ant macOS - dependency path'ai gali 
 
 * make - šios komandos pagalba sukompiliuosite pateiktą kodą
 * make run - šios komandos pagalba paleisite programą
+
+### Feature'ai:
+* Balanso tikrinimas
+* Hash'o tikrinimas
