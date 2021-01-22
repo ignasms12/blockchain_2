@@ -23,8 +23,6 @@ void transaction::executeTransaction(userPool &users){
     else{
         if(sender->getBalance() < nSum){
             nStatus = 2;
-            // cout << "Sender balance - " << sender->getBalance() << endl;
-            // cout << "Sent amount - " << nSum << endl;
         }
         else{
             nStatus = 1;
@@ -32,5 +30,4 @@ void transaction::executeTransaction(userPool &users){
             receiver->updateBalance(nSum);
         }
     }
-    // cout << "Transaction executed" << endl;
 }

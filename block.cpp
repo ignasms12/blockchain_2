@@ -17,7 +17,6 @@ void block::setTransactions(vector<transaction> chainCurrentTransactions){
 uint32_t block::mineBlock(uint32_t nDifficulty, uint32_t maxTries){
     uint32_t tries = 0;
     char cstr[nDifficulty+1];
-    // cout << "Bloko mininimo foro pradzia" << endl;
     for(uint32_t i = 0; i < nDifficulty; i++){
         cstr[i] = '0';
     }
@@ -68,8 +67,6 @@ void block::merkleTree(){
 
     uint32_t i = 0;
     while( i < hashes.size()){
-        // cout << "Hashes.size - " << hashes.size() << endl;
-        // cout << "Hashes[" << i <<"].size - " << hashes[i].size() << endl;
         vector<string> tempVec;
         string hash1 = "";
         string hash2 = "";

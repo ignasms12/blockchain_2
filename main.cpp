@@ -53,23 +53,56 @@ int main(){
 
     uint32_t lastTransSize = -1;
 
+    vector<block> blocks;
+    vector<vector<int>> indexMap;
+    vector<vector<transaction>> transactions;
+
     while(transactionPool.size() > 0){
         uint32_t i = 0;
         if(transactionPool.size() <= 100){
             lastTransSize = transactionPool.size();
         }
-        while(i < 100){
-            uint32_t randIndex = rand() % transactionPool.size();
 
-            bChain.vChainCurrentTransactions.push_back(transactionPool[randIndex]);
-            transactionPool.erase(transactionPool.begin() + randIndex);
-            if(i == lastTransSize){
-                break;
+        for(uint32_t g = 0; g < 5; g++){
+            vector<int> indexMap_singleBlock;
+            vector<transaction> transactions_singleBlock;
+
+            while(i < 100){
+                uint32_t randIndex = 0;
+                vector<int>::iterator it;
+
+                do{
+                    randIndex = rand() % transactionPool.size();
+                    it = find(indexMap_singleBlock.begin(), indexMap_singleBlock.end(), randIndex);
+                    if(indexMap_singleBlock.size() == 0){
+                        break;
+                    }
+                }
+                while(it != indexMap_singleBlock.end());
+
+                transactions_singleBlock.push_back(transactionPool[randIndex]);
+                indexMap_singleBlock.push_back(randIndex);
+
+                if(i == lastTransSize){
+                    break;
+                }
+                i++;
             }
-            i++;
-        }o
+            transactions.push_back(transactions_singleBlock);
+            indexMap.push_back(indexMap_singleBlock);
+        }
         cout << "Mining block..." << endl;
-        bChain.addBlock(users);
+        uint32_t blockIndex = bChain.addBlock(users, transactions);
+
+
+        vector<int> indexMap_correct = indexMap[blockIndex];
+        sort(indexMap_correct.begin(), indexMap_correct.end(), greater<int>());
+
+        for(int g = 0; g < indexMap_correct.size(); g++){
+            transactionPool.erase(transactionPool.begin() + indexMap_correct[g]);
+        }
+        transactions.clear();
+        indexMap.clear();
 
     }
 

@@ -66,7 +66,7 @@ class block{
         int64_t nNonce;
         vector<transaction> vBlockTransactions;
         time_t tTime;
-        string version = 1;
+        string version = "1";
         uint32_t nDifficulty;
         string sMerkleRootHash;
 };
@@ -74,7 +74,7 @@ class block{
 class blockchain{
     public:
         blockchain();
-        void addBlock(userPool &users);
+        uint32_t addBlock(userPool &users, vector<vector<transaction>> transactions);
         uint32_t newTransaction(string sSender,string sReceiver,uint32_t nSum);
         vector<transaction> vChainCurrentTransactions;
         inline vector<block> getChain() {return vChain;};

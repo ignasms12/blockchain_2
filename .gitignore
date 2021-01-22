@@ -6,6 +6,8 @@
 # Prerequisites
 *.d
 merkleHash.cpp
+.vscode
+main
 
 # Compiled Object files
 *.slo

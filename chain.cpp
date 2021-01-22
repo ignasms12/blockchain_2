@@ -8,21 +8,64 @@ blockchain::blockchain(){
     vChain.back().mineBlock(nDifficulty, 100000000);
 }
 
-void blockchain::addBlock(userPool &users){
-    cout << "Chaino dydis - " << vChain.size() << endl;
-    
-    newTransaction("0",nodeAddress,1);
-    block bNew(vChain.size(), vChainCurrentTransactions);
-    bNew.execTransactions(users);
-    bNew.merkleTree();
+uint32_t mine(uint32_t maxTries, vector<block> blocks, uint32_t nDifficulty){
+    uint32_t blockIndex = 0;
+    vector<int>::iterator it;
+    vector<int> usedBlocks;
+    uint32_t randIndex = 0;
+    for(int i = 0; i < 5; i++){
+        do{
+            randIndex = rand() % 5;
+            it = find(usedBlocks.begin(), usedBlocks.end(), randIndex);
+            if(usedBlocks.size() == 0){
+                break;
+            }
+        }
+        while(it != usedBlocks.end());
+        usedBlocks.push_back(randIndex);
+        uint32_t tries = 0;
+        tries = blocks[i].mineBlock(nDifficulty, maxTries);
+        if(tries <= maxTries){
+            blockIndex = i;
+            break;
+        }
+        else{
+            if(i == 4){
+                maxTries += 100000;
+                mine(maxTries, blocks, nDifficulty);
+            }   
+        }
+    }
+    return blockIndex;
+}
 
-    vChainCurrentTransactions.clear();
 
-    bNew.sPrevHash = getLastBlock().calculateHash();
-    vChain.push_back(bNew);
+uint32_t blockchain::addBlock(userPool &users, vector<vector<transaction>> transactions){
 
-    cout << "Block mined " << bNew.calculateHash() << endl;
+    vector<block> blocks;
+    uint32_t maxTries = 100000;
+
+    for(int i = 0; i < 5; i++){
+        transaction miningTrans("0", nodeAddress, 1);
+        transactions[i].push_back(miningTrans);
+        block bNew(vChain.size(), transactions[i]);
+        bNew.merkleTree();
+        bNew.sPrevHash = getLastBlock().calculateHash();
+        blocks.push_back(bNew);
+    }
+
+    uint32_t blockIndex = mine(maxTries, blocks, nDifficulty);
+
+
+    blocks[blockIndex].execTransactions(users);
+    vChain.push_back(blocks[blockIndex]);
+
+    cout << "Block mined " << blocks[blockIndex].calculateHash() << endl;
     cout << endl;
+
+    blocks.clear();
+
+    return blockIndex;
 }
 
 block blockchain::getLastBlock() const{
