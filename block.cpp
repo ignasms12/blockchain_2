@@ -56,6 +56,7 @@ string block::getContent() const {
 }
 
 void block::merkleTree(){
+
     vector<vector<string> > hashes;
     vector<string> tempVector;
 
@@ -96,13 +97,13 @@ void block::merkleTree(){
 void block::execTransactions(userPool &users){
     uint32_t corrTrans = 0;
     for(uint32_t i = 0; i < vBlockTransactions.size(); i++){
-        vBlockTransactions[i].executeTransaction(users);
-        if(vBlockTransactions[i].nStatus == 2){
+        uint32_t returnValue = vBlockTransactions[i].executeTransaction(users); // 0 - new, 1 - completed, 2 - failed, 3 - corrupt
+        if(returnValue == 2){
             vBlockTransactions.erase(vBlockTransactions.begin() + i);
             i--;
             // cout << "Transaction index - " << i << " - removed" << endl;
         }
-        else if(vBlockTransactions[i].nStatus == 3){
+        else if(returnValue == 3){
             vBlockTransactions.erase(vBlockTransactions.begin() + i);
             i--;
             corrTrans++;

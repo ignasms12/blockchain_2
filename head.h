@@ -40,8 +40,7 @@ class transaction{
     public:
         transaction(string sSender,string sReceiver,uint32_t nSum);
         string stringify() const;
-        void executeTransaction(userPool &users);
-        uint32_t nStatus; // 0 - new, 1 - completed, 2 - failed, 3 - corrupt
+        uint32_t executeTransaction(userPool &users);
     private:
         string sTransactionId;
         string sSender;
