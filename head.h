@@ -7,6 +7,7 @@
 #include <map>
 #include "openssl/sha.h"
 #include <uuid/uuid.h>
+#include <bitcoin/bitcoin.hpp>
 
 using namespace std;
 
@@ -40,8 +41,8 @@ class transaction{
     public:
         transaction(string sSender,string sReceiver,uint32_t nSum);
         string stringify() const;
-        void executeTransaction(userPool &users);
-        uint32_t nStatus; // 0 - new, 1 - completed, 2 - failed, 3 - corrupt
+        uint32_t executeTransaction(userPool &users);
+        inline string getId(){return sTransactionId;};
     private:
         string sTransactionId;
         string sSender;
@@ -51,6 +52,7 @@ class transaction{
 
 class block{
     public:
+        inline int getTransSize() {return vBlockTransactions.size();};
         string sPrevHash;
         block(uint32_t nIndexIn);
         block(uint32_t nIndexIn, vector<transaction> vChainCurrentTransactions);
@@ -60,7 +62,7 @@ class block{
         string getContent() const;
         uint32_t nIndex;
         string calculateHash() const;
-        void merkleTree();
+        void merkleTree(bc::hash_list& merkle);
         void execTransactions(userPool &users);
     private:
         int64_t nNonce;
@@ -68,7 +70,7 @@ class block{
         time_t tTime;
         string version = "1";
         uint32_t nDifficulty;
-        string sMerkleRootHash;
+        bc::hash_digest sMerkleRootHash;
 };
 
 class blockchain{

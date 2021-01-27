@@ -48,15 +48,23 @@ uint32_t blockchain::addBlock(userPool &users, vector<vector<transaction>> trans
     for(int i = 0; i < 5; i++){
         transaction miningTrans("0", nodeAddress, 1);
         transactions[i].push_back(miningTrans);
+        bc::hash_list hashes;
+        for(uint32_t j = 0; j < transactions[i].size(); j++){
+            uint32_t n = transactions[i][j].getId().length();
+            char c[65];
+            strcpy(c, transactions[i][j].getId().c_str());
+            hashes.push_back(bc::hash_literal(c));
+        }
+
         block bNew(vChain.size(), transactions[i]);
-        bNew.merkleTree();
+        bNew.merkleTree(hashes);
         bNew.sPrevHash = getLastBlock().calculateHash();
         blocks.push_back(bNew);
     }
 
     uint32_t blockIndex = mine(maxTries, blocks, nDifficulty);
 
-
+    // cout << "Dabartinio bloko transakciju kiekis - " << blocks[blockIndex].getTransSize() << endl;
     blocks[blockIndex].execTransactions(users);
     vChain.push_back(blocks[blockIndex]);
 

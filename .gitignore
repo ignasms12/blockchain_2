@@ -5,7 +5,7 @@
 ### C++ ###
 # Prerequisites
 *.d
-merkleHash.cpp
+merkleHash_new.cpp
 .vscode
 main
 
